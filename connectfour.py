@@ -217,15 +217,35 @@ class Player:
         s += "ply = " + str(self.ply)
         return s
 
+    def opp_ch(self):
+        """"Give the opposite char of players use"""
+        if self.ox == 'X':
+            return 'O'
+        elif self.ox == 'O':
+            return 'X'
+    
+    def score_board(self, b):
+        """"Return score (float) of given input b"""
+        if b.wins_for(self.ox) == True:
+            return 100.0
+        elif b.wins_for(self.opp_ch()) == True:
+            return 0.0
+        else:
+            return 50.0
+
+p = Player('X', 'LEFT', 2)
+assert repr(p) == 'Player: ox = X, tbt = LEFT, ply = 2'
+p = Player('O', 'RANDOM', 0)
+assert repr(p) == 'Player: ox = O, tbt = RANDOM, ply = 0'
+
+p = Player('X', 'LEFT', 3)
+assert p.opp_ch() == 'O'
+assert Player('O', 'LEFT', 0).opp_ch() == 'X'
+
 b = Board(7, 6)
-# #b.add_move(0, 'X')
-# #b.add_move(0, 'O')
-
-# b = Board(2,2)
-# b.set_board('0011')
-
-#b = Board(7, 6)
-#b.set_board('23344545515')
-
-"Rene"
-"Jacco"
+b.set_board('01020305')
+print(b)
+p = Player('X', 'LEFT', 0)
+assert p.score_board(b) == 100.0
+assert Player('O', 'LEFT', 0).score_board(b) == 0.0
+assert Player('O', 'LEFT', 0).score_board(Board(7, 6)) == 50.0
