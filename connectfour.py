@@ -226,3 +226,6 @@ b = Board(7, 6)
 
 #b = Board(7, 6)
 #b.set_board('23344545515')
+
+
+"hoi test"
