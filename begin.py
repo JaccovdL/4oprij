@@ -1,3 +1,5 @@
+import random
+
 def in_a_row_4_east(ch, r_start, c_start, a, n):
     """Return True if four consecutive chars in direction E
     """
@@ -218,20 +220,41 @@ class Player:
         return s
 
     def opp_ch(self):
-        """"Give the opposite char of players use"""
+        """Give the opposite char of players use"""
         if self.ox == 'X':
             return 'O'
         elif self.ox == 'O':
             return 'X'
     
     def score_board(self, b):
-        """"Return score (float) of given input b"""
+        """Return score (float) of given input b"""
         if b.wins_for(self.ox) == True:
             return 100.0
         elif b.wins_for(self.opp_ch()) == True:
             return 0.0
+        elif b.is_full() == True:
+            return -1.0
         else:
             return 50.0
+
+    def tiebreak_move(self, scores):
+        """Scores will be a list of floiting-points
+        If only one highest number in list return column of this score
+        Otherwise choose the colomn of highest score depending on strategy"""
+        options = []
+        for i in range(len(scores)):
+            if scores[i] == max(scores):
+                options += [i]
+        if len(options) == 1:
+            return options[0]
+        elif self.tbt == 'LEFT':
+            return options[0]
+        elif self.tbt == 'RIGHT':
+            return options[-1]
+        elif self.tbt == 'RANDOM':
+            return random.choice(options)
+        else:
+            return 'FOUT!'       
 
 p = Player('X', 'LEFT', 2)
 assert repr(p) == 'Player: ox = X, tbt = LEFT, ply = 2'
@@ -244,8 +267,23 @@ assert Player('O', 'LEFT', 0).opp_ch() == 'X'
 
 b = Board(7, 6)
 b.set_board('01020305')
-print(b)
+#print(b)
 p = Player('X', 'LEFT', 0)
 assert p.score_board(b) == 100.0
 assert Player('O', 'LEFT', 0).score_board(b) == 0.0
 assert Player('O', 'LEFT', 0).score_board(Board(7, 6)) == 50.0
+b = Board(7, 6)
+b.set_board('000000111111222223423333344444555555666666')
+#print(b)
+assert Player('X', 'LEFT', 0).score_board(b) == -1.0
+assert Player('O', 'LEFT', 0).score_board(b) == -1.0
+assert Player('X', 'LEFT', 0).score_board(Board(7, 6)) == 50.0
+
+scores = [0, 0, 50, 0, 0, 0, 0]
+p = Player('X', 'LEFT', 1)
+assert p.tiebreak_move(scores) == 2
+scores = [0, 0, 50, 0, 50, 50, 0]
+p = Player('X', 'LEFT', 1)
+p2 = Player('X', 'RIGHT', 1)
+assert p.tiebreak_move(scores) == 2
+assert p2.tiebreak_move(scores) == 5
