@@ -1,4 +1,5 @@
 import random
+from re import L
 
 def in_a_row_4_east(ch, r_start, c_start, a, n):
     """Return True if four consecutive chars in direction E
@@ -259,7 +260,24 @@ class Player:
     def scores_for(self, b):
         """Return list of index values with best possible moves (after self.ply amount of moves)"""
         scores = [50.0] *b.width
+
+        # if b.allows_move(scores[0]) == False:
+        #     scores[0] = -1.0
+        # return p.scores_for(b, scores[1:])
+        
+        for i in range(len(scores)):
+            if b.allows_move(i) == False:
+                scores[i] = -1.0
+            elif b.wins_for(self.ox):
+                scores[i] = 100.0
+            elif b.wins_for(self.opp_ch()):
+                scores[i] = 0.0
+        print(b.wins_for(p.ox))
+        print(p.ox)
         print(scores)
+        
+
+
 
 
 p = Player('X', 'LEFT', 2)
@@ -295,4 +313,6 @@ assert p.tiebreak_move(scores) == 2
 assert p2.tiebreak_move(scores) == 5
 
 b = Board(7, 6)
+b.set_board('11111112323232')
+
 p.scores_for(b)
