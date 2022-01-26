@@ -254,7 +254,13 @@ class Player:
         elif self.tbt == 'RANDOM':
             return random.choice(options)
         else:
-            return 'FOUT!'       
+            return 'FOUT!'
+
+    def scores_for(self, b):
+        """Return list of index values with best possible moves (after self.ply amount of moves)"""
+        scores = [50.0] *b.width
+        print(scores)
+
 
 p = Player('X', 'LEFT', 2)
 assert repr(p) == 'Player: ox = X, tbt = LEFT, ply = 2'
@@ -287,3 +293,6 @@ p = Player('X', 'LEFT', 1)
 p2 = Player('X', 'RIGHT', 1)
 assert p.tiebreak_move(scores) == 2
 assert p2.tiebreak_move(scores) == 5
+
+b = Board(7, 6)
+p.scores_for(b)
