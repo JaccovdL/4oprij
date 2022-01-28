@@ -272,14 +272,18 @@ class Player:
                 scores[i] = 100.0
             elif b.wins_for(self.opp_ch()):
                 scores[i] = 0.0
-        print(b.wins_for(p.ox))
-        print(p.ox)
-        print(scores)
+            elif self.ply == 0:
+                scores[i] = 50.0
+
+            else:
+                b.add_move(i, self.ox)
+                print(b)
+            
+                self.ply -=1
+                print(self.ply)
+
+        return scores
         
-
-
-
-
 p = Player('X', 'LEFT', 2)
 assert repr(p) == 'Player: ox = X, tbt = LEFT, ply = 2'
 p = Player('O', 'RANDOM', 0)
@@ -318,6 +322,45 @@ assert p.tiebreak_move(scores) == 1
 assert p2.tiebreak_move(scores) == 1 or 2 or 3 or 4 or 5 or 7
 
 b = Board(7, 6)
+b.set_board('1111111232')
+#assert p.scores_for(b) == [50.0, -1.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+b = Board(7,6)
+b.set_board('111111123232343')
+#assert p.scores_for(b) == [100.0, -1.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+b = Board(7,6)
 b.set_board('11111112323232')
+#assert p.scores_for(b) == [0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+b = Board(7,6)
+p3 = Player('X', 'RANDOM', 0)
+b.set_board('111111123')
+#assert p3.scores_for(b) == [50.0, -1.0, 50.0, 50.0, 50.0, 50.0, 50.0]
 
+b = Board(7, 6)
+b.set_board('1211244445')
+
+# 0-ply lookahead ziet geen bedreigingen
+#assert Player('X', 'LEFT', 0).scores_for(b) == [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+
+# 1-play lookahead ziet een manier om te winnen
+# (als het de beurt van 'O' was!)
+#assert Player('O', 'LEFT', 1).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 50.0, 50.0]
+
+# # 2-ply lookahead ziet manieren om te verliezen
+# # ('X' kan maar beter in kolom 3 spelen...)
+# assert Player('X', 'LEFT', 2).scores_for(b) == [0.0, 0.0, 0.0, 50.0, 0.0, 0.0, 0.0]
+
+# # 3-ply lookahead ziet indirecte overwinningen
+# # ('X' ziet dat kolom 3 een overwinning oplevert!)
+# assert Player('X', 'LEFT', 3).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
+
+# # Bij 3-ply ziet 'O' nog geen gevaar
+# # als hij in een andere kolom speelt
+# assert Player('O', 'LEFT', 3).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 50.0, 50.0]
+
+# # Maar bij 4-ply ziet 'O' wel het gevaar!
+# # weer jammer dat het niet de beurt van 'O' is...
+# assert Player('O', 'LEFT', 4).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
+p = Player('O', 'LEFT', 1)
+
+print(b)
 p.scores_for(b)
