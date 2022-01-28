@@ -278,9 +278,10 @@ class Player:
             else:
                 b.add_move(i, self.ox)
                 print(b)
+                continue
             
-                self.ply -=1
-                print(self.ply)
+            self.ply -=1
+            print(self.ply)
 
         return scores
         
