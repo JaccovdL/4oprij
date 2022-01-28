@@ -311,6 +311,11 @@ p = Player('X', 'LEFT', 1)
 p2 = Player('X', 'RIGHT', 1)
 assert p.tiebreak_move(scores) == 2
 assert p2.tiebreak_move(scores) == 5
+scores = [0,50,50,50,50,0,50]
+p = Player('X', 'LEFT', 5)
+p2 = Player('X', 'RANDOM', 1)
+assert p.tiebreak_move(scores) == 1
+assert p2.tiebreak_move(scores) == 1 or 2 or 3 or 4 or 5 or 7
 
 b = Board(7, 6)
 b.set_board('11111112323232')
