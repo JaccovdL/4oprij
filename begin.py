@@ -276,12 +276,18 @@ class Player:
                 scores[i] = 50.0
 
             else:
-                b.add_move(i, self.ox)
-                print(b)
-                continue
+                b.add_move(i, self.ox) # je gaat een move doen voor elke kollom, om deze ze te kunnen testen, voor een goede strategie.
+                op = Player(self.opp_ch(), self.tbt, self.ply-1) # omdat de tegenstander altijd 1 zet minder vooruit kijkt dan jezelf voeg je -1 toe. Voor de rest dezelfde keuzes.
+                op_scores = op.scores_for(b) # hier worden de scores gecontroleerd van de tegenstander
+                if max(op_scores) == 0: # als de tegenstander niet kan winnen, betekent dat winst voor de player
+                    scores[i] = 100
+                elif max(op_scores) == 100: # als de tegenstander kan winnen, betekent dat verlies voor de player
+                    scores[i] = 0
+                elif max(op_scores) == 50: # als de tegenstander niet kan winnen of verliezen, betekent dat hetzelfde voor de player.
+                    scores[i] = 50
+                b.del_move(i) # uiteindelijk de "test" zet weer verwijderen.
             
-            self.ply -=1
-            print(self.ply)
+        
 
         return scores
         
@@ -340,27 +346,27 @@ b = Board(7, 6)
 b.set_board('1211244445')
 
 # 0-ply lookahead ziet geen bedreigingen
-#assert Player('X', 'LEFT', 0).scores_for(b) == [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+assert Player('X', 'LEFT', 0).scores_for(b) == [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
 
 # 1-play lookahead ziet een manier om te winnen
 # (als het de beurt van 'O' was!)
-#assert Player('O', 'LEFT', 1).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 50.0, 50.0]
+assert Player('O', 'LEFT', 1).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 50.0, 50.0]
 
 # # 2-ply lookahead ziet manieren om te verliezen
 # # ('X' kan maar beter in kolom 3 spelen...)
-# assert Player('X', 'LEFT', 2).scores_for(b) == [0.0, 0.0, 0.0, 50.0, 0.0, 0.0, 0.0]
+assert Player('X', 'LEFT', 2).scores_for(b) == [0.0, 0.0, 0.0, 50.0, 0.0, 0.0, 0.0]
 
 # # 3-ply lookahead ziet indirecte overwinningen
 # # ('X' ziet dat kolom 3 een overwinning oplevert!)
-# assert Player('X', 'LEFT', 3).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
+assert Player('X', 'LEFT', 3).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
 
 # # Bij 3-ply ziet 'O' nog geen gevaar
 # # als hij in een andere kolom speelt
-# assert Player('O', 'LEFT', 3).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 50.0, 50.0]
+assert Player('O', 'LEFT', 3).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 50.0, 50.0]
 
 # # Maar bij 4-ply ziet 'O' wel het gevaar!
 # # weer jammer dat het niet de beurt van 'O' is...
-# assert Player('O', 'LEFT', 4).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
+assert Player('O', 'LEFT', 4).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
 p = Player('O', 'LEFT', 1)
 
 print(b)
