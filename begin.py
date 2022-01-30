@@ -151,8 +151,13 @@ class Board:
     def is_full(self):
         """Return True if board is full
         """
+        full = True
         for col in range(0, self.width):
-            return self.allows_move(col) == False
+            if self.allows_move(col) == True:
+                full = False
+        return full
+
+
     
     def del_move(self, col):
         """Delete top value (X/O) of column
@@ -179,31 +184,38 @@ class Board:
 
         print('Welkom bij Vier op een rij! \n')
         print(b)
-        
-
-        # while True:
-        #     col = -1
-        #     while not self.allows_move(col):
-        #         col = int(input('Keuze van X: '))
-        #         print()
-        #     self.add_move(col, 'X')
-        #     if self.wins_for('X') == True:
-        #         print('X wint -- Gefeliciteerd!')
-        #         print(b)
-        #         break
-        #     print(b)
-        #     print()
-        #     col = -1
-        #     while not self.allows_move(col):
-        #         col = int(input('Keuze van O: '))
-        #         print()
-        #     self.add_move(col, 'O')
-        #     if self.wins_for('O') == True:
-        #         print('O wint -- Gefeliciteerd!\n')
-        #         print(b)
-        #         break
-        #     print(b)
-        #     print()
+        while True:
+            if b.is_full() == True:
+                print('draw')
+                break
+            col = -1
+            while not self.allows_move(col):
+                if px == 'human':
+                    col = int(input('Keuze van x: '))
+                    print()
+                else:
+                    col = px.next_move(b)
+                self.add_move(col, 'X')
+            if self.wins_for('X') == True:
+                print('X wint -- Gefeliciteerd!')
+                print(b)
+                break
+            print(b)
+            print()
+            col = -1
+            while not self.allows_move(col):
+                if po == 'human':
+                    col = int(input('Keuze van O: '))
+                    print()
+                else:
+                    col = po.next_move(b)
+            self.add_move(col, 'O')
+            if self.wins_for('O') == True:
+                print('O wint -- Gefeliciteerd!\n')
+                print(b)
+                break
+            print(b)
+            print()
 
 class Player:
     """An AI player for Connect Four."""
@@ -388,7 +400,7 @@ assert Player('X', 'RIGHT', 2).next_move(b) == 3
 # als er maar één beste zet is...
 assert Player('X', 'RANDOM', 2).next_move(b) == 3
 
-px = Player('X', 'LEFT', 0)
-po = Player('O', 'LEFT', 0)
+px = Player('X', 'LEFT', 3)
+po = Player('O', 'LEFT', 2)
 b = Board(7, 6)
 b.play_game(px, po)
