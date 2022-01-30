@@ -1,0 +1,21 @@
+Het bestand kent tot dusver de genoemde klassen Board en Player met bijbehorende constructor(en) en methodes.
+
+De opp_ch geeft het karakter van de tegenstander terug waar deze tegenstander (AI) mee dient te spelen.
+Score_board geeft de score van het huidige bord terug. Dit gaat o.b.v. het eigen karakter (self.ox, die meegegeven is aan de klasse Player).
+Daarnaast uiteraard op eerder genoemde karakter op basis van self.opp_ch() wat het karakter van de tegenstander uitleest.
+Via controles van de klasse Board wordt bekeken of één van de twee mogelijk gewonnen heeft (wins_for).
+Tiebreak_move geeft een mogelijke zet terug op basis van een lijst scores (in volgende methode verder bepaald).
+Afhankelijk van de strategie wordt (één van) de beste optie gekozen als zet.
+
+Scores_for geeft een lijst terug van waardes van zetten per kolom o.b.v. index positie.
+Hoe hoger de waarde hoe beter de zet.
+Daarbij wordt bekeken of de zet mogeiljk is, of er met de zet gewonnne kan worden of juist of er verloren kan worden.
+Naast algemene controles die de directe volgende zet bekijken wordt ook een aantal zetten vooruit gekeken, de meeggegeven ply in Player.
+Deze zitten in een vertakking en stappen alsvolgt;
+Je gaat een move doen voor elke kollom, om deze ze te kunnen testen, voor een goede strategie.
+Omdat de tegenstander altijd 1 zet minder vooruit kijkt dan jezelf voeg je -1 toe. Voor de rest dezelfde keuzes.
+Hier worden de scores gecontroleerd van de tegenstander
+Als de tegenstander niet kan winnen, betekent dat winst voor de player -> 100 wordt teruggeven als bijbehorende waarde.
+Als de tegenstander kan winnen, betekent dat verlies voor de player -> 0 wordt teruggeven als bijbehorende waarde.
+Als de tegenstander niet kan winnen of verliezen, betekent dat hetzelfde voor de player. -> 50 wordt teruggegeven.
+Uiteindelijk de "test" zet weer verwijderen.

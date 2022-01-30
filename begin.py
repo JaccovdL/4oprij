@@ -239,7 +239,7 @@ class Player:
             return 50.0
 
     def tiebreak_move(self, scores):
-        """Scores will be a list of floiting-points
+        """Scores will be a list of floating-points
         If only one highest number in list return column of this score
         Otherwise choose the colomn of highest score depending on strategy"""
         options = []
@@ -260,11 +260,6 @@ class Player:
     def scores_for(self, b):
         """Return list of index values with best possible moves (after self.ply amount of moves)"""
         scores = [50.0] *b.width
-
-        # if b.allows_move(scores[0]) == False:
-        #     scores[0] = -1.0
-        # return p.scores_for(b, scores[1:])
-        
         for i in range(len(scores)):
             if b.allows_move(i) == False:
                 scores[i] = -1.0
@@ -274,7 +269,6 @@ class Player:
                 scores[i] = 0.0
             elif self.ply == 0:
                 scores[i] = 50.0
-
             else:
                 b.add_move(i, self.ox) # je gaat een move doen voor elke kollom, om deze ze te kunnen testen, voor een goede strategie.
                 op = Player(self.opp_ch(), self.tbt, self.ply-1) # omdat de tegenstander altijd 1 zet minder vooruit kijkt dan jezelf voeg je -1 toe. Voor de rest dezelfde keuzes.
@@ -286,9 +280,6 @@ class Player:
                 elif max(op_scores) == 50: # als de tegenstander niet kan winnen of verliezen, betekent dat hetzelfde voor de player.
                     scores[i] = 50
                 b.del_move(i) # uiteindelijk de "test" zet weer verwijderen.
-            
-        
-
         return scores
         
 p = Player('X', 'LEFT', 2)
@@ -330,17 +321,17 @@ assert p2.tiebreak_move(scores) == 1 or 2 or 3 or 4 or 5 or 7
 
 b = Board(7, 6)
 b.set_board('1111111232')
-#assert p.scores_for(b) == [50.0, -1.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+assert p.scores_for(b) == [50.0, -1.0, 50.0, 50.0, 50.0, 50.0, 50.0]
 b = Board(7,6)
 b.set_board('111111123232343')
-#assert p.scores_for(b) == [100.0, -1.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+assert p.scores_for(b) == [100.0, -1.0, 100.0, 100.0, 100.0, 100.0, 100.0]
 b = Board(7,6)
 b.set_board('11111112323232')
-#assert p.scores_for(b) == [0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+assert p.scores_for(b) == [0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
 b = Board(7,6)
 p3 = Player('X', 'RANDOM', 0)
 b.set_board('111111123')
-#assert p3.scores_for(b) == [50.0, -1.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+assert p3.scores_for(b) == [50.0, -1.0, 50.0, 50.0, 50.0, 50.0, 50.0]
 
 b = Board(7, 6)
 b.set_board('1211244445')
@@ -370,4 +361,4 @@ assert Player('O', 'LEFT', 4).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 
 p = Player('O', 'LEFT', 1)
 
 print(b)
-p.scores_for(b)
+print(p.scores_for(b))
