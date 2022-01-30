@@ -174,34 +174,36 @@ class Board:
         return False
                 # controleer of je in één van de vier richtingen wint
     
-    def host_game(self):
+    def play_game(self, px, po):
         """Create a running game"""
 
         print('Welkom bij Vier op een rij! \n')
         print(b)
-        while True:
-            col = -1
-            while not self.allows_move(col):
-                col = int(input('Keuze van X: '))
-                print()
-            self.add_move(col, 'X')
-            if self.wins_for('X') == True:
-                print('X wint -- Gefeliciteerd!')
-                print(b)
-                break
-            print(b)
-            print()
-            col = -1
-            while not self.allows_move(col):
-                col = int(input('Keuze van O: '))
-                print()
-            self.add_move(col, 'O')
-            if self.wins_for('O') == True:
-                print('O wint -- Gefeliciteerd!\n')
-                print(b)
-                break
-            print(b)
-            print()
+        
+
+        # while True:
+        #     col = -1
+        #     while not self.allows_move(col):
+        #         col = int(input('Keuze van X: '))
+        #         print()
+        #     self.add_move(col, 'X')
+        #     if self.wins_for('X') == True:
+        #         print('X wint -- Gefeliciteerd!')
+        #         print(b)
+        #         break
+        #     print(b)
+        #     print()
+        #     col = -1
+        #     while not self.allows_move(col):
+        #         col = int(input('Keuze van O: '))
+        #         print()
+        #     self.add_move(col, 'O')
+        #     if self.wins_for('O') == True:
+        #         print('O wint -- Gefeliciteerd!\n')
+        #         print(b)
+        #         break
+        #     print(b)
+        #     print()
 
 class Player:
     """An AI player for Connect Four."""
@@ -281,7 +283,13 @@ class Player:
                     scores[i] = 50
                 b.del_move(i) # uiteindelijk de "test" zet weer verwijderen.
         return scores
-        
+
+    def next_move(self, b):
+        """"Given board and returns int of column number of requested object which will be the next move
+        """
+        scores = self.scores_for(b)
+        tiebreak = self.tiebreak_move(scores)
+        return tiebreak    
 p = Player('X', 'LEFT', 2)
 assert repr(p) == 'Player: ox = X, tbt = LEFT, ply = 2'
 p = Player('O', 'RANDOM', 0)
@@ -359,6 +367,28 @@ assert Player('O', 'LEFT', 3).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 5
 # # weer jammer dat het niet de beurt van 'O' is...
 assert Player('O', 'LEFT', 4).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
 p = Player('O', 'LEFT', 1)
+#print(b)
+#print(p.scores_for(b))
 
-print(b)
-print(p.scores_for(b))
+b = Board(7, 6)
+b.set_board('1211244445')
+p = Player('X', 'LEFT', 2)
+#print(b)
+#print(p.next_move(b))
+
+assert Player('X', 'LEFT', 1).next_move(b) == 0
+assert Player('X', 'RIGHT', 1).next_move(b) == 6
+assert Player('X', 'LEFT', 2).next_move(b) == 3
+
+# de keuzestrategie maakt niet uit
+# als er maar één beste zet is...
+assert Player('X', 'RIGHT', 2).next_move(b) == 3
+
+# nogmaals, de keuzestrategie maakt niet uit
+# als er maar één beste zet is...
+assert Player('X', 'RANDOM', 2).next_move(b) == 3
+
+px = Player('X', 'LEFT', 0)
+po = Player('O', 'LEFT', 0)
+b = Board(7, 6)
+b.play_game(px, po)
