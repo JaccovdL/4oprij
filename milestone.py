@@ -239,7 +239,7 @@ class Player:
             return 50.0
 
     def tiebreak_move(self, scores):
-        """Scores will be a list of floiting-points
+        """Scores will be a list of floating-points
         If only one highest number in list return column of this score
         Otherwise choose the colomn of highest score depending on strategy"""
         options = []
@@ -260,11 +260,6 @@ class Player:
     def scores_for(self, b):
         """Return list of index values with best possible moves (after self.ply amount of moves)"""
         scores = [50.0] *b.width
-
-        # if b.allows_move(scores[0]) == False:
-        #     scores[0] = -1.0
-        # return p.scores_for(b, scores[1:])
-        
         for i in range(len(scores)):
             if b.allows_move(i) == False:
                 scores[i] = -1.0
@@ -272,14 +267,21 @@ class Player:
                 scores[i] = 100.0
             elif b.wins_for(self.opp_ch()):
                 scores[i] = 0.0
-        print(b.wins_for(p.ox))
-        print(p.ox)
-        print(scores)
+            elif self.ply == 0:
+                scores[i] = 50.0
+            else:
+                b.add_move(i, self.ox) # je gaat een move doen voor elke kollom, om deze ze te kunnen testen, voor een goede strategie.
+                op = Player(self.opp_ch(), self.tbt, self.ply-1) # omdat de tegenstander altijd 1 zet minder vooruit kijkt dan jezelf voeg je -1 toe. Voor de rest dezelfde keuzes.
+                op_scores = op.scores_for(b) # hier worden de scores gecontroleerd van de tegenstander
+                if max(op_scores) == 0: # als de tegenstander niet kan winnen, betekent dat winst voor de player
+                    scores[i] = 100
+                elif max(op_scores) == 100: # als de tegenstander kan winnen, betekent dat verlies voor de player
+                    scores[i] = 0
+                elif max(op_scores) == 50: # als de tegenstander niet kan winnen of verliezen, betekent dat hetzelfde voor de player.
+                    scores[i] = 50
+                b.del_move(i) # uiteindelijk de "test" zet weer verwijderen.
+        return scores
         
-
-
-
-
 p = Player('X', 'LEFT', 2)
 assert repr(p) == 'Player: ox = X, tbt = LEFT, ply = 2'
 p = Player('O', 'RANDOM', 0)
@@ -311,8 +313,52 @@ p = Player('X', 'LEFT', 1)
 p2 = Player('X', 'RIGHT', 1)
 assert p.tiebreak_move(scores) == 2
 assert p2.tiebreak_move(scores) == 5
+scores = [0,50,50,50,50,0,50]
+p = Player('X', 'LEFT', 5)
+p2 = Player('X', 'RANDOM', 1)
+assert p.tiebreak_move(scores) == 1
+assert p2.tiebreak_move(scores) == 1 or 2 or 3 or 4 or 5 or 7
 
 b = Board(7, 6)
+b.set_board('1111111232')
+assert p.scores_for(b) == [50.0, -1.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+b = Board(7,6)
+b.set_board('111111123232343')
+assert p.scores_for(b) == [100.0, -1.0, 100.0, 100.0, 100.0, 100.0, 100.0]
+b = Board(7,6)
 b.set_board('11111112323232')
+assert p.scores_for(b) == [0.0, -1.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+b = Board(7,6)
+p3 = Player('X', 'RANDOM', 0)
+b.set_board('111111123')
+assert p3.scores_for(b) == [50.0, -1.0, 50.0, 50.0, 50.0, 50.0, 50.0]
 
-p.scores_for(b)
+b = Board(7, 6)
+b.set_board('1211244445')
+
+# 0-ply lookahead ziet geen bedreigingen
+assert Player('X', 'LEFT', 0).scores_for(b) == [50.0, 50.0, 50.0, 50.0, 50.0, 50.0, 50.0]
+
+# 1-play lookahead ziet een manier om te winnen
+# (als het de beurt van 'O' was!)
+assert Player('O', 'LEFT', 1).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 50.0, 50.0]
+
+# # 2-ply lookahead ziet manieren om te verliezen
+# # ('X' kan maar beter in kolom 3 spelen...)
+assert Player('X', 'LEFT', 2).scores_for(b) == [0.0, 0.0, 0.0, 50.0, 0.0, 0.0, 0.0]
+
+# # 3-ply lookahead ziet indirecte overwinningen
+# # ('X' ziet dat kolom 3 een overwinning oplevert!)
+assert Player('X', 'LEFT', 3).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
+
+# # Bij 3-ply ziet 'O' nog geen gevaar
+# # als hij in een andere kolom speelt
+assert Player('O', 'LEFT', 3).scores_for(b) == [50.0, 50.0, 50.0, 100.0, 50.0, 50.0, 50.0]
+
+# # Maar bij 4-ply ziet 'O' wel het gevaar!
+# # weer jammer dat het niet de beurt van 'O' is...
+assert Player('O', 'LEFT', 4).scores_for(b) == [0.0, 0.0, 0.0, 100.0, 0.0, 0.0, 0.0]
+p = Player('O', 'LEFT', 1)
+
+print(b)
+print(p.scores_for(b))
