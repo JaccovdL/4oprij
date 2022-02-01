@@ -188,27 +188,27 @@ class Board:
             if b.is_full() == True:
                 print('draw')
                 break
-            col = -1
-            while not self.allows_move(col):
-                if px == 'human':
-                    col = int(input('Keuze van x: '))
-                    print()
-                else:
-                    col = px.next_move(b)
-                self.add_move(col, 'X')
+            #col = -1
+            #while not self.allows_move(col):
+            if px == 'human':
+                col = int(input('Keuze van x: '))
+                print()
+            else:
+                col = px.next_move(b)
+            self.add_move(col, 'X')
             if self.wins_for('X') == True:
                 print('X wint -- Gefeliciteerd!')
                 print(b)
                 break
             print(b)
             print()
-            col = -1
-            while not self.allows_move(col):
-                if po == 'human':
-                    col = int(input('Keuze van O: '))
-                    print()
-                else:
-                    col = po.next_move(b)
+            #col = -1
+            #while not self.allows_move(col):
+            if po == 'human':
+                col = int(input('Keuze van O: '))
+                print()
+            else:
+                col = po.next_move(b)
             self.add_move(col, 'O')
             if self.wins_for('O') == True:
                 print('O wint -- Gefeliciteerd!\n')
