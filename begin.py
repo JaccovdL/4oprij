@@ -190,7 +190,7 @@ class Board:
                 break
             #col = -1
             #while not self.allows_move(col):
-            if px == 'human':
+            if 'human' in px.tbt.lower():
                 col = int(input('Keuze van x: '))
                 print()
             else:
@@ -204,7 +204,7 @@ class Board:
             print()
             #col = -1
             #while not self.allows_move(col):
-            if po == 'human':
+            if 'human' in po.tbt.lower():
                 col = int(input('Keuze van O: '))
                 print()
             else:
@@ -400,7 +400,8 @@ assert Player('X', 'RIGHT', 2).next_move(b) == 3
 # als er maar één beste zet is...
 assert Player('X', 'RANDOM', 2).next_move(b) == 3
 
-px = Player('X', 'LEFT', 3)
-po = Player('O', 'LEFT', 2)
+px = Player('X', 'RANDOM', 3)
+po = Player('O', 'HUMAn', 2)
+print(po)
 b = Board(7, 6)
 b.play_game(px, po)
