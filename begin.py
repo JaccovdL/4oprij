@@ -1,5 +1,6 @@
 import random
 from re import L
+import numpy as np
 
 def in_a_row_4_east(ch, r_start, c_start, a, n):
     """Return True if four consecutive chars in direction E
@@ -147,6 +148,25 @@ class Board:
                 return False
             else:
                 return True
+
+    def row_full(self):
+        for col in range(self.width):
+            if self.data[5][col] == " ":
+             return False
+            else:
+                self.data[5][col] = " "
+                # np.delete(self.data, 5, 0)
+                
+            
+            
+
+    # def remove_row(self):
+    #     for col in range(self.width):
+    #         if self.row_full == True:
+    #             self.data[5][col] = "i"
+
+
+
     
     def is_full(self):
         """Return True if board is full
