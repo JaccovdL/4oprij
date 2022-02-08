@@ -150,20 +150,17 @@ class Board:
                 return True
 
     def row_full(self):
+        """ Het verwijderen van een volle rij, extra speltoevoeging"""
         for col in range(self.width):
             if self.data[5][col] == " ":
              return False
             else:
-                self.data[5][col] = " "
-                # np.delete(self.data, 5, 0)
+                self.data[5][col] = self.data[4][col]
+                self.data[4][col] = self.data[3][col]
+                self.data[3][col] = self.data[2][col]
+                self.data[2][col] = self.data[1][col]
+                self.data[1][col] = self.data[0][col]
                 
-            
-            
-
-    # def remove_row(self):
-    #     for col in range(self.width):
-    #         if self.row_full == True:
-    #             self.data[5][col] = "i"
 
 
 
@@ -205,11 +202,14 @@ class Board:
         print('Welkom bij Vier op een rij! \n')
         print(b)
         while True:
+            
             if b.is_full() == True:
                 print('draw')
                 break
+            
             #col = -1
             #while not self.allows_move(col):
+            
             if 'human' in px.tbt.lower():
                 col = int(input('Keuze van x: '))
                 print()
