@@ -1,0 +1,25 @@
+oplevering.txt
+
+Gemaakt door: Jacco van der Laan en René Wiltinge
+Opdracht: ConnectFour
+
+Het spel wordt gestart doormiddel van oplevering.py te starten in de terminal.
+Hierin kun je in de bovenste regel zien wat de instellingen van het spel zijn.
+Dit houdt in welke steen je hebt en hoeveel beurten de AI naarvoren kan kijk (ply).
+
+De eerste zet wordt gedaan door de AI. Vervolgens kan er een steen in het bord gegooid worden, door 
+het desbetreffende kolom nummer in te typen en op enter te drukken. Hierna wordt het nieuwe bord geprint.
+De AI doet vervolgens weer een zet etc.etc. tot op een gegeven moment iemand het spel gewonnen heeft. Door 4 dezelfde
+soort steen op een rij te hebben. Dit mag zowel horizontaal, als verticaal en diagonaal.
+
+Extra toevoeging:
+De extra spel toevoeging is dat wanneer er een rij vol is, deze wordt verwijdert uit het bord en dat de rest
+hierdoor weer naar beneden zakt. Dit geeft een andere dimensie aan het spel en zorgt voor een vernieuwde game
+met een meer tactische speelstijl.
+
+De functie die hiervoor is gebruikt is de row_full(). 
+Deze functie kijkt, afhankelijk van de breedte en de hoogte van het bord, of er in de onderste rij geen lege hokjes zijn.
+Wanneer er een leeg hokje is zal deze functie niks doen. Is dit wel het geval, dan maakt hij deze hokjes allemaal leeg.
+Vervolgens verplaatst hij de rijen allemaal een rij naar benenden. Dit is gedaan middels een for loop. Ook is dit verwerkt 
+in de play_game. Wanneer je dus als speler of AI de rij volmaakt zal de volgende zet zonder die rij zijn. 
+
