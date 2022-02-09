@@ -151,19 +151,12 @@ class Board:
 
     def row_full(self):
         """ Het verwijderen van een volle rij, extra speltoevoeging"""
+        rowfull = True
         for col in range(self.width):
             if self.data[5][col] == " ":
-             return False
-            else:
-                self.data[5][col] = self.data[4][col]
-                self.data[4][col] = self.data[3][col]
-                self.data[3][col] = self.data[2][col]
-                self.data[2][col] = self.data[1][col]
-                self.data[1][col] = self.data[0][col]
+             rowfull = False
+        return rowfull
                 
-
-
-
     
     def is_full(self):
         """Return True if board is full
@@ -216,6 +209,14 @@ class Board:
             else:
                 col = px.next_move(b)
             self.add_move(col, 'X')
+            if b.row_full() == True:
+                for col in range(self.width):
+                    self.data[5][col] = self.data[4][col]
+                    self.data[4][col] = self.data[3][col]
+                    self.data[3][col] = self.data[2][col]
+                    self.data[2][col] = self.data[1][col]
+                    self.data[1][col] = self.data[0][col]
+    
             if self.wins_for('X') == True:
                 print('X wint -- Gefeliciteerd!')
                 print(b)
@@ -230,6 +231,13 @@ class Board:
             else:
                 col = po.next_move(b)
             self.add_move(col, 'O')
+            if b.row_full() == True:
+                for col in range(self.width):
+                    self.data[5][col] = self.data[4][col]
+                    self.data[4][col] = self.data[3][col]
+                    self.data[3][col] = self.data[2][col]
+                    self.data[2][col] = self.data[1][col]
+                    self.data[1][col] = self.data[0][col]
             if self.wins_for('O') == True:
                 print('O wint -- Gefeliciteerd!\n')
                 print(b)
